@@ -1,10 +1,17 @@
 <template>
   <div class="container">
-    <Header @toggle-add-task="togglerAddTask" />
+    <Header
+      @toggle-add-task="togglerAddTask"
+      :showAddTask="showAddTask"
+    />
     <div v-if="showAddTask">
       <AddTask @add-task="addTask" />
     </div>
-    <Tasks @toggle-remainder="toggleRemainder" @delete-task="deleteTask" :tasks="tasks" />
+    <Tasks
+      @toggle-remainder="toggleRemainder"
+      @delete-task="deleteTask"
+      :tasks="tasks"
+    />
   </div>
 </template>
 
@@ -39,29 +46,20 @@ export default {
     },
     toggleRemainder (id) {
       this.tasks = this.tasks.map(t => t.id === id ? {...t, reminder: !t.reminder} : t)
+    },
+    async fetchTasks() {
+      const response = await fetch('api/tasks')
+      const data = await response.json()
+      return data
+    },
+    async fetchTask(id) {
+      const response = await fetch(`/tasks/${id}`)
+      const data = await response.json()
+      return data
     }
   },
-  created() {
-    this.tasks = [
-      {
-        id: 1,
-        text: 'Doctors Appointment',
-        day: 'March 1st at 2.30pm',
-        reminder: true
-      },
-      {
-        id: 2,
-        text: 'Meeting at School',
-        day: 'March 3rd at 1.30pm',
-        reminder: true
-      },
-      {
-        id: 3,
-        text: 'Food Shopping',
-        day: 'March 3rd at 11:00am',
-        reminder: false
-      }
-    ]
+  async created() {
+    this.tasks = await this.fetchTasks()
   }
 }
 </script>
