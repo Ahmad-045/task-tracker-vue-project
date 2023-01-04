@@ -1,7 +1,7 @@
 <template>
   <header>
     <h1>Task Tracker</h1>
-    <Button text="Add Task" color="green" />
+    <Button @toggle-add-task="$emit('toggle-add-task')" text="Add Task" color="green" />
   </header>
 </template>
 
@@ -13,7 +13,8 @@ export default {
   name: 'Header',
   components: {
     Button
-  }
+  },
+  emits: ['toggle-add-task']
 }
 </script>
 
